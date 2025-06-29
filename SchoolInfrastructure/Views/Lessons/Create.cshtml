@@ -1,0 +1,74 @@
+﻿@model SchoolDomain.Model.Lesson
+
+@{
+    ViewData["Title"] = "Створити";
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto rounded border p-3">
+        <h2 class="text-center mb-5">Нове заняття</h2>
+
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="row mb-3">
+                <label asp-for="CourseId" class="col-sm-2 col-form-label">Курс</label>
+                <div class="col-sm-8">
+                    <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseId">
+                        <option value="">Оберіть курс</option>
+                    </select>
+                    <span asp-validation-for="CourseId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label asp-for="TeacherId" class="col-sm-2 col-form-label">Викладач</label>
+                <div class="col-sm-8">
+                    <select asp-for="TeacherId" class="form-control" asp-items="ViewBag.TeacherId">
+                        <option value="">Оберіть викладача</option>
+                    </select>
+                    <span asp-validation-for="TeacherId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label asp-for="Name" class="col-sm-2 col-form-label">Назва</label>
+                <div class="col-sm-8">
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label asp-for="Description" class="col-sm-2 col-form-label">Опис</label>
+                <div class="col-sm-8">
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label asp-for="LessonDate" class="col-sm-2 col-form-label">Дата</label>
+                <div class="col-sm-8">
+                    <input asp-for="LessonDate" class="form-control" type="date" />
+                    <span asp-validation-for="LessonDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="offset-sm-4 col-sm-2 d-grid">
+                    <button type="submit" class="btn btn-primary">Створити</button>
+                </div>
+                <div class="col-sm-2 d-grid">
+                    <a asp-action="Index" class="btn btn-outline-primary">Скасувати</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

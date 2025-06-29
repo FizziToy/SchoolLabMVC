@@ -1,0 +1,39 @@
+﻿@model SchoolDomain.Model.Course
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto rounded border p-3">
+        <h2 class="text-center text-danger mb-4">Видалення курсу</h2>
+
+        <h5 class="text-center mb-4">Ви впевнені, що хочете видалити цей курс?</h5>
+
+        <dl class="row mb-4">
+            <dt class="col-sm-4">Назва</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Name)</dd>
+
+            <dt class="col-sm-4">Опис</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Description)</dd>
+
+            <dt class="col-sm-4">Ціна</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Price)</dd>
+        </dl>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div class="row">
+                <div class="col-sm-3 offset-sm-3 d-grid">
+                    <button type="submit" class="btn btn-danger">Видалити</button>
+                </div>
+                <div class="col-sm-3 d-grid">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Скасувати</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a href="javascript:history.back()">Назад до списку</a>
+</div>

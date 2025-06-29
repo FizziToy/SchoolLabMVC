@@ -1,0 +1,86 @@
+﻿@model IEnumerable<SchoolDomain.Model.Teacher>
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Наші вчителі</h1>
+    <div class="row">
+        @foreach (var teacher in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    @if (!string.IsNullOrEmpty(teacher.TeacherUrl))
+                    {
+                        <img src="@teacher.TeacherUrl" class="card-img-top" alt="Фото вчителя" style="height: 200px; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <div class="card-img-top bg-light text-center" style="height: 200px; line-height: 200px;">
+                            Без фото
+                        </div>
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@teacher.User?.Email</h5>
+                        <p class="card-text">@(teacher.Description ?? "Немає опису")</p>
+                        @if (!string.IsNullOrEmpty(teacher.LessonLink))
+                        {
+                            <a href="@teacher.LessonLink" class="btn btn-outline-primary" target="_blank">Посилання на уроки</a>
+                        }
+                        @if (ViewData["IsStudent"] as bool? == true)
+                        {
+                            <a asp-controller="Reviews" asp-action="Create" asp-route-teacherId="@teacher.Id" class="btn btn-success mt-2">Залишити відгук</a>
+                        }
+                        @if (ViewData["CurrentUserId"] != null && teacher.UserId == ViewData["CurrentUserId"]?.ToString())
+                        {
+                            <a asp-action="Edit" class="btn btn-primary mt-2">Редагувати профіль</a>
+                        }
+                        <h6 class="mt-3">Відгуки:</h6>
+                        @{
+                            var reviews = (ViewData["Reviews"] as List<SchoolDomain.Model.Review>)?.Where(r => r.TeacherId == teacher.Id).ToList() ?? new List<SchoolDomain.Model.Review>();
+                            var currentStudent = ViewData["CurrentStudent"] as SchoolDomain.Model.Student;
+                            var isAdmin = ViewData["IsAdmin"] as bool? == true;
+                        }
+                        @if (reviews.Any())
+                        {
+                            <ul class="list-group">
+                                @foreach (var review in reviews)
+                                {
+                                    <li class="list-group-item">
+                                        <strong>Оцінка:</strong>
+                                        <span class="star-display">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (i <= (review.Rating ?? 0))
+                                                {
+                                                    <span class="star filled">&#9733;</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="star">&#9733;</span>
+                                                }
+                                            }
+                                        </span>
+                                        <div class="review-comment mt-2">@review.Comment</div>
+                                        <small>Від: @review.Student.User?.Email, @review.Date</small>
+                                        @if ((currentStudent != null && review.StudentId == currentStudent.Id) || isAdmin)
+                                        {
+                                            <form asp-controller="Reviews" asp-action="Delete" asp-route-id="@review.Id" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-danger btn-sm">Видалити</button>
+                                            </form>
+                                        }
+                                        @if (currentStudent != null && review.StudentId == currentStudent.Id && review.CreatedAt.AddMinutes(5) > DateTime.UtcNow)
+                                        {
+                                            <a asp-controller="Reviews" asp-action="Edit" asp-route-id="@review.Id" class="btn btn-warning btn-sm">Редагувати</a>
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p>Немає відгуків.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

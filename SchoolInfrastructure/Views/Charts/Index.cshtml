@@ -1,0 +1,143 @@
+﻿@{
+    ViewData["Title"] = "Діаграми";
+}
+
+<style>
+    canvas {
+        display: block !important;
+        max-width: 100%;
+        border: 1px solid #ccc;
+    }
+
+    .chart-container {
+        position: relative;
+        margin: auto;
+        height: 300px;
+        width: 500px;
+    }
+</style>
+
+<h1>Діаграми</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Кількість курсів за ціною</h3>
+        <div class="chart-container">
+            <canvas id="coursesChart"></canvas>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h3>Кількість уроків за курсами</h3>
+        <div class="chart-container">
+            <canvas id="lessonsChart"></canvas>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script>
+        console.log('Перевірка Chart.js:', typeof Chart !== 'undefined' ? 'Завантажено' : 'Не завантажено');
+
+        try {
+            const coursesData = @Html.Raw(Json.Serialize(ViewBag.CoursesData ?? new List<object>()));
+            console.log('Дані курсів:', coursesData);
+
+            if (!coursesData || coursesData.length === 0) {
+                console.warn('Дані для курсів відсутні');
+                document.getElementById('coursesChart').style.display = 'none';
+                document.querySelector('.col-md-6:first-child').innerHTML += '<p>Немає даних для відображення курсів</p>';
+            } else {
+                const coursesLabels = coursesData.map(item => {
+                    const price = Number(item.price || item.Price);
+                    return isNaN(price) ? 'Невідома ціна' : price.toFixed(2) + ' грн';
+                });
+                const coursesValues = coursesData.map(item => item.count || item.Count || 0);
+
+                console.log('Мітки курсів:', coursesLabels);
+                console.log('Значення курсів:', coursesValues);
+
+                new Chart(document.getElementById('coursesChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: coursesLabels,
+                        datasets: [{
+                            label: 'Кількість курсів',
+                            data: coursesValues,
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Кількість'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Ціна (грн)'
+                                }
+                            }
+                        }
+                    }
+                });
+                console.log('Діаграма курсів ініціалізована');
+            }
+
+            const lessonsData = @Html.Raw(Json.Serialize(ViewBag.LessonsData ?? new List<object>()));
+            console.log('Дані уроків:', lessonsData);
+
+            if (!lessonsData || lessonsData.length === 0) {
+                console.warn('Дані для уроків відсутні');
+                document.getElementById('lessonsChart').style.display = 'none';
+                document.querySelector('.col-md-6:last-child').innerHTML += '<p>Немає даних для відображення уроків</p>';
+            } else {
+                const lessonsLabels = lessonsData.map(item => item.course || item.Course || 'Без назви');
+                const lessonsValues = lessonsData.map(item => item.count || item.Count || 0);
+
+                console.log('Мітки уроків:', lessonsLabels);
+                console.log('Значення уроків:', lessonsValues);
+
+                new Chart(document.getElementById('lessonsChart'), {
+                    type: 'pie',
+                    data: {
+                        labels: lessonsLabels,
+                        datasets: [{
+                            label: 'Кількість уроків',
+                            data: lessonsValues,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.5)',
+                                'rgba(54, 162, 235, 0.5)',
+                                'rgba(255, 206, 86, 0.5)',
+                                'rgba(75, 192, 192, 0.5)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            }
+                        }
+                    }
+                });
+                console.log('Діаграма уроків ініціалізована');
+            }
+        } catch (error) {
+            console.error('Помилка ініціалізації діаграм:', error);
+        }
+    </script>
+}

@@ -72,8 +72,8 @@ namespace SchoolInfrastructure.Areas.Identity.Pages.Account
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Скинути пароль",
+                    $"Для скидання паролю перейдіть за <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>цим посиланням</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
