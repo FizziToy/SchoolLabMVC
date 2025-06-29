@@ -1,0 +1,57 @@
+﻿@model IEnumerable<SchoolDomain.Model.Lesson>
+
+@{
+    ViewData["Title"] = "Уроки";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 sidebar">
+            <h3>Уроки</h3>
+            <ul class="list-group">
+                @foreach (var lesson in Model)
+                {
+                    <li class="list-group-item">
+                        <a href="@Url.Action("Details", new { id = lesson.Id })"
+                           class="lesson-link"
+                           data-lesson-id="@lesson.Id">
+                            @lesson.Name
+                        </a>
+                    </li>
+                }
+            </ul>
+            <p class="mt-3">
+                <a asp-action="Create" asp-route-courseId="@ViewData["CourseId"]" class="btn btn-success">Створити новий урок</a>
+            </p>
+        </div>
+
+        <div class="col-md-9 main-content">
+            <h1>Вміст уроку</h1>
+            <div id="lesson-content">
+                <p>Виберіть урок із бічної панелі, щоб переглянути його вміст.</p>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.lesson-link').click(function (e) {
+                e.preventDefault();
+                var lessonId = $(this).data('lesson-id');
+                console.log('URL запиту: @Url.Action("Details", "Lessons")');
+                console.log('Lesson ID: ' + lessonId);
+                    $.ajax({
+                    url: '/Lessons/DetailsPartial/' + lessonId,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#lesson-content').html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('#lesson-content').html('<p>Помилка завантаження: ' + xhr.status + ' ' + xhr.statusText + '</p>');
+                    }
+                });
+            });
+        });
+    </script>
+}

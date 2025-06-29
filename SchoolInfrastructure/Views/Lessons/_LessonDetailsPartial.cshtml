@@ -1,0 +1,13 @@
+﻿@model SchoolDomain.Model.Lesson
+
+<div>
+    <h2>@Model.Name</h2>
+    <p><strong>Опис:</strong> @Model.Description</p>
+    <p><strong>Дата:</strong> @(Model.LessonDate.HasValue ? Model.LessonDate.Value.ToString("dd/MM/yyyy") : "Немає дати")</p>
+    <p><strong>Курс:</strong> @Model.Course.Name</p>
+    <p><strong>Викладач:</strong> @(Model.Teacher?.User != null ? Model.Teacher.User.UserName : "Немає викладача")</p>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Редагувати</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Видалити</a>
+    </div>
+</div>

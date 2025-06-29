@@ -47,7 +47,7 @@ public partial class AsplabContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=asplab;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=asplab;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -190,6 +190,7 @@ public partial class AsplabContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Reviews__3214EC079A48CC17");
 
             entity.Property(e => e.Comment).HasMaxLength(150);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.Date).HasDefaultValueSql("(CONVERT([date],getdate()))");
 
             entity.HasOne(d => d.Student).WithMany(p => p.Reviews)

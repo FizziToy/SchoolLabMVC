@@ -1,0 +1,53 @@
+﻿@page
+@model EnableAuthenticatorModel
+@{
+    ViewData["Title"] = "Налаштування додатку-аутентифікатора";
+    ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
+}
+
+<partial name="_StatusMessage" for="StatusMessage" />
+<h3>@ViewData["Title"]</h3>
+<div>
+    <p>Щоб використовувати додаток-аутентифікатор, виконайте наступні кроки:</p>
+    <ol class="list">
+        <li>
+            <p>
+                Завантажте додаток для двофакторної автентифікації, наприклад Microsoft Authenticator для
+                <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android</a> та
+                <a href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS</a>, або Google Authenticator для
+                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=uk">Android</a> та
+                <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>.
+            </p>
+        </li>
+        <li>
+            <p>Скануйте QR-код або введіть цей ключ <kbd>@Model.SharedKey</kbd> у свій додаток для двофакторної автентифікації. Пробіли та регістр не мають значення.</p>
+            <div id="qrCode"></div>
+            <input id="qrCodeData" type="hidden" data-url="@Model.AuthenticatorUri" />
+        </li>
+        <li>
+            <p>
+                Після сканування QR-коду або введення ключа, ваш додаток для двофакторної автентифікації надасть унікальний код.
+                Введіть цей код у поле підтвердження нижче.
+            </p>
+            <div class="row">
+                <div class="col-md-6">
+                    <form id="send-code" method="post">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Code" class="form-control" autocomplete="off" placeholder="Введіть код." />
+                            <label asp-for="Input.Code" class="control-label form-label">Код підтвердження</label>
+                            <span asp-validation-for="Input.Code" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="w-100 btn btn-lg btn-primary">Підтвердити</button>
+                        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                    </form>
+                </div>
+            </div>
+        </li>
+    </ol>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script type="text/javascript" src="~/lib/qrcode.js"></script>
+    <script type="text/javascript" src="~/js/qr.js"></script>
+}

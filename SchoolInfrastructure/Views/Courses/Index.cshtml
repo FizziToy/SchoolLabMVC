@@ -1,0 +1,45 @@
+﻿@model IEnumerable<SchoolDomain.Model.Course>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Курси</h1>
+
+@if (User.IsInRole("Teacher") || User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">Створити новий курс</a>
+    </p>
+}
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-3 mb-3">
+            <div class="card h-100" style="width: 16rem;">
+                <img src="/img/Logo.png" class="card-img-top" alt="Фото курсу">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title"><strong>Назва:</strong> @item.Name</h5>
+                    <p class="card-text"><strong>Опис:</strong></p>
+                    <textarea class="form-control mb-2" rows="3" readonly>@item.Description</textarea>
+                    <p class="card-text"><strong>Ціна:</strong> @item.Price</p>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="mt-auto">
+                            @if (User.IsInRole("Student") || User.IsInRole("Teacher") || User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning">Уроки</a>
+                            }
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-info">Редагувати</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Видалити</a>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

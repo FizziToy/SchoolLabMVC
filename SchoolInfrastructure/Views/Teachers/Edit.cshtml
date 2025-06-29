@@ -1,0 +1,42 @@
+﻿@model SchoolDomain.Model.Teacher
+
+@{
+    ViewData["Title"] = "Редагувати профіль вчителя";
+}
+
+<h1>Редагувати профіль вчителя</h1>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    
+    <div class="form-group">
+        <label class="control-label">Фото вчителя</label>
+        <input type="file" name="TeacherPhoto" class="form-control" accept="image/*" />
+        @if (!string.IsNullOrEmpty(Model.TeacherUrl))
+        {
+            <img src="@Model.TeacherUrl" alt="Поточне фото" style="max-width: 200px; margin-top: 10px;" />
+        }
+    </div>
+    
+    <div class="form-group">
+        <label asp-for="Description" class="control-label">Опис</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="LessonLink" class="control-label">Посилання на урок</label>
+        <input asp-for="LessonLink" class="form-control" />
+        <span asp-validation-for="LessonLink" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Зберегти" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
